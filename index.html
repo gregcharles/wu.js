@@ -1,967 +1,290 @@
+---
+---
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <title>wu.js</title>
-
-    <link rel="stylesheet" href="blueprint/screen.css" type="text/css" media="screen, projection" />
-    <link rel="stylesheet" href="blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection" />
-    <link rel="stylesheet" href="blueprint/print.css" type="text/css" media="print" />
-    <!--[if IE]><link rel="stylesheet" href="blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]-->
-
-    <style type="text/css">
-      #nav li {
-          padding-left: 0;
-          margin-left: -1.5em;
-      }
-      h5 code {
-          font-weight: bold !important;
-      }
-      h1 a {
-          text-decoration: none;
-      }
-    </style>
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="index.css" rel="stylesheet" />
+    <title>
+      wu.js &mdash; Higher order functions for ECMAScript 6 iterators
+    </title>
   </head>
-
   <body>
-    <div class="container">
+    <div class="container-fluid">
 
-      <h1><a href="http://github.com/fitzgen/wu.js/"><code class="large">wu.js</code></a></h1>
+      <header class="row col-xs-12 col-sm-9 col-md-9 col-lg-9">
+        <h1><a href="#"><code>wu.js</code></a></h1>
+        <hr/>
+        <p>
+          <code>wu.js</code> is a JavaScript library providing higher order
+          functions (such as <code>map</code>, <code>filter</code>,
+          and <code>reduce</code>) for ECMAScript 6 iterators.
+        </p>
+        <hr/>
+      </header>
 
-      <hr />
-      <h2 class="alt">A lazy, functional Javascript library that ain't nuthin' ta f*ck wit.</h2>
-      <hr />
-
-      <div class="span-7 colborder" id="nav">
-        <h2>Navigation</h2>
-        <ul>
+      <div class="row col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <ul id="sidebar" class="nav nav-sidebar affix">
           <li>
-            <a href="#introduction">Introduction</a>
-            <ul>
-              <li><a href="#what-is-wu-js">What is <code>wu.js</code>?</a></li>
-              <li><a href="#how-to-read-this-document">How to read this document</a></li>
-              <li><a href="#inspirations">Inspirations</a></li>
+            <a href="#getting-started">Getting Started</a>
+            <ul class="nav">
+              <li>
+                <a href="#basics">Basics</a>
+              </li>
+              <li>
+                <a href="#examples">Examples</a>
+              </li>
             </ul>
           </li>
           <li>
-            <a href="#download">Download</a>
-          <li>
-            <a href="#api">API</a>
-            <ul>
+            <a href="#API">API</a>
+            <ul class="nav">
+              {% for p in site.posts %}
               <li>
-                <a href="#iterators">Iterators</a>
-                <ul>
-                  <li>
-                    <a href="#lazy">Lazy</a>
-                    <ul>
-                      <li><a href="#wu-chain"><code>wu.chain</code></a></li>
-                      <li><a href="#wu-cycle"><code>wu.cycle</code></a></li>
-                      <li><a href="#wu-range"><code>wu.range</code></a></li>
-                      <li><a href="#wu-zip"><code>wu.zip</code></a></li>
-                      <li><a href="#wu-zipWith"><code>wu.zipWith</code></a></li>
-                      <li><a href="#wu-dot"><code>wu.Iterator.dot</code></a></li>
-                      <li><a href="#wu-dropwhile"><code>wu.Iterator.dropWhile</code></a></li>
-                      <li><a href="#wu-filter"><code>wu.Iterator.filter</code></a></li>
-                      <li><a href="#wu-has"><code>wu.Iterator.has</code></a></li>
-                      <li><a href="#wu-map"><code>wu.Iterator.map</code></a></li>
-                      <li><a href="#wu-mapply"><code>wu.Iterator.mapply</code></a></li>
-                      <li><a href="#wu-next"><code>wu.Iterator.next</code></a></li>
-                      <li><a href="#wu-takewhile"><code>wu.Iterator.takeWhile</code></a></li>
-                    </ul>
-                  </li>
-                  <li>
-                    <a href="#forceful">Forceful</a>
-                    <ul>
-                      <li><a href="#wu-all"><code>wu.Iterator.all</code></a></li>
-                      <li><a href="#wu-any"><code>wu.Iterator.any</code></a></li>
-                      <li><a href="#wu-asynceach"><code>wu.Iterator.asyncEach</code></a></li>
-                      <li><a href="#wu-each"><code>wu.Iterator.each</code></a></li>
-                      <li><a href="#wu-eachply"><code>wu.Iterator.eachply</code></a></li>
-                      <li><a href="#wu-force"><code>wu.Iterator.force</code></a></li>
-                      <li><a href="#wu-groupby"><code>wu.Iterator.groupBy</code></a></li>
-                      <li><a href="#wu-reduce"><code>wu.Iterator.reduce</code></a></li>
-                      <li><a href="#wu-reduceright"><code>wu.Iterator.reduceRight</code></a></li>
-                      <li><a href="#wu-toarray"><code>wu.Iterator.toArray</code></a></li>
-                    </ul>
-                  </li>
-                  <li><a href="#extending-iterators">Extending iterators</a></li>
-                </ul>
+                <a href="#{{ p.title | slugify }}">{{ p.title }}</a>
               </li>
-              <li>
-                <a href="#pattern-matching">Pattern matching</a>
-                <ul>
-                  <li><a href="#wu-match"><code>wu.match</code></a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#lego-functions">Lego functions</a>
-                <ul>
-                  <li><a href="#wu-autocurry"><code>wu.autoCurry</code></a></li>
-                  <li><a href="#wu-bind"><code>wu.bind</code></a></li>
-                  <li><a href="#wu-compose"><code>wu.compose</code></a></li>
-                  <li><a href="#wu-curry"><code>wu.curry</code></a></li>
-                  <li><a href="#wu-not"><code>wu.not</code></a></li>
-                  <li><a href="#wu-partial"><code>wu.partial</code></a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#utilities">Utilities</a>
-                <ul>
-                  <li><a href="#wu-eq"><code>wu.eq</code></a></li>
-                  <li><a href="#wu-memoize"><code>wu.memoize</code></a></li>
-                  <li><a href="#wu-toarray2"><code>wu.toArray</code></a></li>
-                  <li><a href="#wu-tobool"><code>wu.toBool</code></a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#wu-noconflict">wu.noConflict</a>
-              </li>
+              {% endfor %}
             </ul>
           </li>
           <li>
             <a href="#contributing">Contributing</a>
+            <ul class="nav">
+              <li>
+                <a href="#building">Building</a>
+              </li>
+              <li>
+                <a href="#tests">Tests</a>
+              </li>
+              <li>
+                <a href="#documentation">Documentation</a>
+              </li>
+            </ul>
           </li>
-          <li><a href="#tests">Tests</a></li>
         </ul>
       </div>
 
-      <div class="span-16 last" id="main">
+      <div class="row col-xs-12 col-sm-9 col-md-9 col-lg-9">
 
-        <h2 id="introduction"><a href="#introduction">Introduction</a></h2>
+        <section id="getting-started">
+          <h3><a href="#getting-started">Getting Started</h3></a>
 
-        <h3 id="what-is-wu-js"><a href="#what-is-wu-js">What is <code>wu.js</code>?</a></h3>
+          <h4>In Modern Browsers Supporting ES6</h4>
 
-        <p>
-          <code>Wu.js</code> is a library for lazy, functional programming in
-          Javascript. Works great in the browser, and also with CommonJS
-          (including node and Narwhal).
-        </p>
+          <h5>
+            <a href="./wu.js">Download the ES6 version</a>
+          </h5>
 
-        <p>
-          The largest part of wu is dedicated to iterators. Iterators are lazy
-          sequences with a number of methods that encourage functional
-          programming. What does it mean to be lazy? Many people might expect
-          the following code to log "1 squared is 1", "2 squared is 4", and "3
-          squared is 9" immediately.
-        </p>
+          {% highlight html %}
+<script src="path/to/wu.js"></script>
+{% endhighlight %}
 
-        <pre class="box">wu([1,2,3]).map(function (n) {
-    console.log(n + " squared is " + (n*n));
-    return n*n;
-});</pre>
+          <h4>In Legacy ES5 Browsers</h4>
 
-        <p>
-          However, nothing is logged. Because iterators are lazy, you must
-          explicitly ask for an item and force evaluation. As you ask for items
-          from this iterator, the messages will come one by one.
-        </p>
+          <h5>
+            <a href="./wu.es5.js">Download the ES6 version</a>
+          </h5>
 
-        <pre class="box">&gt;&gt;&gt; var iterator = wu([1,2,3]).map(function (n) {
-...     console.log(n + " squared is " + (n*n));
-...     return n*n;
-... });
-&gt;&gt;&gt; iterator.next();
-"1 squared is 1"
-1
-&gt;&gt;&gt; iterator.next();
-"2 squared is 4"
-4</pre>
+          {% highlight html %}
+<script src="path/to/traceur-runtime.js"></script>
+<script src="path/to/wu.es5.js"></script>
+{% endhighlight %}
 
-        <p>
-          Calling <code>iterator.next()</code> directly isn't very fun though, so there
-          are <a href="#forceful">a few methods</a> that make this logic cleaner for you.
-        </p>
+          <h4>Node and npm</h4>
 
-        <p>
-          The other large chunk of <code>wu.js</code> is a set of higher order
-          functions that strongly encourage a functional style. Examples include
-          Haskell-esque pattern matching with <code>wu.match</code>, function
-          composition, and partial application.
-        </p>
+          {% highlight bash %}
+$ npm install wu
+{% endhighlight %}
 
-        <h3 id="how-to-read-this-document"><a href="#how-to-read-this-document">How to read this document</a></h3>
+          <p>
+            and
+          </p>
 
-        <p>
-          By following along, of course! This page has <code>wu.js</code>
-          included just so that you can open up your console, tweak every
-          example, and play to your heart's content.
-        </p>
+          {% highlight js %}
+var wu = require("wu");
+{% endhighlight %}
 
-        <h3 id="inspirations"><a href="#inspirations">Inspirations</a></h3>
+          <p>
+            <em>Note that this is the compiled-to-ES5 version.</em>
+          </p>
 
-        <p>In no particular order:</p>
+          <section id="basics">
+            <h4><a href="#basics">Basics</a></h4>
 
-        <ul>
-          <li><a href="http://www.sbcl.org/">Common Lisp</a></li>
-          <li><a href="http://www.haskell.org/">Haskell</a></li>
-          <li><a href="http://docs.python.org/library/itertools.html">itertools</a></li>
-          <li><a href="http://jquery.com/">jQuery</a></li>
-          <li><a href="http://www.prototypejs.org/">Prototype</a></li>
-          <li><a href="http://documentcloud.github.com/underscore/">underscore.js</a></li>
-          <li><a href="http://osteele.com/sources/javascript/functional/">Functional.js</a></li>
-          <li><a href="http://github.com/jfd/match-js">match-js</a></li>
-          <li><a href="http://closure-library.googlecode.com/svn/docs/closure_goog_iter_iter.js.html">closure/goog/iter</a></li>
-        </ul>
+            <p>
+              Iterators represent a stream of data. To get the next value in the
+              stream, you call the iterator's <code>next</code> method. This
+              enables both <em>lazy</em> and <em>infinite</em> sequences. Most
+              of the time you don't need to call <code>next</code>
+              yourself: when you use a for-of loop, you're using iterators
+              behind the scenes.
+            </p>
 
-        <hr />
+            <p>
+              Anything can create iterators &mdash; they just need to make an
+              object with the proper <code>next</code> interface &mdash; but
+              generator functions and the <code>yield</code> expression provide
+              convenient syntactic sugar.
+            </p>
 
-        <h2 id="download"><a href="#download">Download</a></h2>
+            {% highlight js %}
+// Generate an infinite sequence of the fibonacci numbers.
+function* fibs() {
+  let a = 0;
+  let b = 1;
+  while (true) {
+    yield a;
+    [a, b] = [b, a + b];
+  }
+}
 
-        <ul class="large">
-          <li><a href="http://github.com/fitzgen/wu.js/downloads/">Tagged versions</a></li>
-          <li><a href="http://github.com/fitzgen/wu.js/">Git</a></li>
-        </ul>
+// Log each even fibonacci number that is less than ten.
 
-        <hr />
+const isEven      = n => n % 2 == 0;
+const lessThanTen = n => n < 10;
 
-        <h2 id="api"><a href="#api">API</a></h2>
+for (let n of fibs()) {
+  if (!lessThanTen(n)) {
+    break;
+  }
+  if (isEven(n)) {
+    console.log(n);
+  }
+}
+{% endhighlight %}
 
-        <h3 id="iterators"><a href="#iterators">Iterators</a></h3>
+            <p>
+              <code>wu.js</code> provides the higher order functions you've come
+              to love from working with arrays (such
+              as <a href="#map"><code>map</code></a>
+              and <a href="#filter"><code>filter</code></a>) as well as ones
+              that may be new to JavaScript developers (such
+              as <a href="#takeWhile"><code>takeWhile</code></a>). With <code>wu.js</code>,
+              we can rewrite the above example like this:
+            </p>
 
-        <h4 id="lazy-methods"><a href="#lazy">Lazy</a></h4>
+            {% highlight js %}
+wu(fibs())
+  .filter(isEven)
+  .takeWhile(lessThanTen)
+  .forEach(console.log.bind(console));
+{% endhighlight %}
 
-        <h5 id="wu-chain"><a href="#wu-chain"><code>wu.chain</code></a></h5>
-        <pre class="spec">wu.chain(iterable1, iterable2, ..., iterableN)</pre>
-        <p>
-          Chain the iterable arguments to produce a new iterator over all items
-          in the iterables.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu.chain([1,2], [3,4], [5,6]).toArray();
-[1, 2, 3, 4, 5, 6]</pre>
+            <p>
+              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/The_Iterator_protocol">
+                Learn more about the ES6 iterator protocol at MDN.
+              </a>
+            </p>
+          </section>
 
-        <h5 id="wu-cycle"><a href="#wu-cycle"><code>wu.cycle</code></a></h5>
-        <pre class="spec">wu.cycle(iterable)</pre>
-        <p>
-          Create an infinite sequence yielding items from the <code>iterable</code>. Once
-          the <code>iterable</code> is exhausted, begin yielding from the start again.
-        </p>
-        <p>
-          Note: trying to force evaluation on infinite sequences will send your
-          code in to an infinite loop and freeze the browser!
-          Use <code>.takeWhile()</code>, <code>.asyncEach()</code>,
-          or <code>.next()</code> when working with infinite sequences.
-        </p>
-        <pre class="box">&gt;&gt;&gt; var iter = wu.cycle([1,2,3]);
-&gt;&gt;&gt; iter.next();
-1
-&gt;&gt;&gt; iter.next();
-2
-&gt;&gt;&gt; iter.next();
-3
-&gt;&gt;&gt; iter.next();
-1
-&gt;&gt;&gt; iter.next();
-2
-&gt;&gt;&gt; iter.next();
-3
-&gt;&gt;&gt; iter.next();
-1</pre>
+          <section id="examples">
+            <h4><a href="#examples">Examples</a></h4>
 
-        <h5 id="wu-range"><a href="#wu-range"><code>wu.range</code></a></h5>
-        <pre class="spec">wu.range(stop)</pre>
-        <pre class="spec">wu.range(start, stop)</pre>
-        <pre class="spec">wu.range(start, stop, incr)</pre>
-        <p>
-          Returns an iterator that yields integers from <code>start</code> up to
-          (but not including) <code>stop</code>, incrementing
-          by <code>incr</code>. <code>Start</code> defaults to
-          0, <code>incr</code> defaults to 1.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu.range(3).toArray();
-[0, 1, 2]
-&gt;&gt;&gt; wu.range(3, 6).toArray()
-[3, 4, 5]
-&gt;&gt;&gt; wu.range(0, 7, 2).toArray()
-[0, 2, 4, 6]</pre>
+            <h5>Binary trees</h5>
 
-        <h5 id="wu-zip"><a href="#wu-zip"><code>wu.zip</code></a></h5>
-        <pre class="spec">wu.zip(iterable1, iterable2, ..., iterableN)</pre>
-        <p>
-          Returns an iterator that yields an array of items <code>[item1, item2,
-          ..., itemN]</code>, where each item is the next item in the
-          corresponding iterable. Iterables can be Iterators, or anything that
-          can be coerced to an iterator.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu.zip(wu.cycle(["even", "odd"]), wu.range(6)).toArray();
-[["even", 0], ["odd", 1], ["even", 2], ["odd", 3], ["even", 4], ["odd", 5]]
-&gt;&gt;&gt; wu.zip([1,2], [3,4], [5,6], [7,8]).next();
-[1, 3, 5, 7]</pre>
+            <p>
+              The following is a simple immutable sorted set implementation that
+              doesn't do tree balancing for simplicity. It has an iterator
+              method which yields items in sorted order.
+            </p>
 
-        <h5 id="wu-zipWith"><a href="#wu-zipWith"><code>wu.zipWith</code></a></h5>
-        <pre class="spec">wu.zipWith(fn, iterable1, iterable2, ..., iterableN)</pre>
-        <p>
-          Returns an iterator that yields the result of applying <code>fn</code>
-          to the items at the same index in every iterable. Iterables can be Iterators,
-          or anything that can be coerced to an iterator.
-        </p>
-        <pre class="box">&gt;&gt;&gt; var add2 = function (a, b) { return a + b; };
-&gt;&gt;&gt; wu.zipWith(add2, [1,2,3], [4,5,6]).toArray();
-[5, 7, 9]
-&gt;&gt;&gt; var add3 = function (a, b, c) { return a + b + c; };
-&gt;&gt;&gt; wu.zipWith(add3, [1, 2, 3], [4, 5, 6], [7, 8, 9]).toArray();
-[12, 15, 18]</pre>
+            {% highlight js %}
+const theEmptySet = null;
 
-        <h5 id="wu-dot"><a href="#wu-dot"><code>wu.Iterator.dot</code></a></h5>
-        <pre class="spec">iterator.dot(propertyName)</pre>
-        <pre class="spec">iterator.dot(methodName)</pre>
-        <pre class="spec">iterator.dot(methodName, arg1, arg2, ..., argN)</pre>
-        <p>
-          Access a property or call a method of each item in this iterator.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu({ foo: 1}, { foo: 2 }, { foo: 3}).dot("foo").toArray();
-[1, 2, 3]
-&gt;&gt;&gt; wu([1, "hi", {}]).dot("toString").toArray();
-["1", "hi", "[object Object]"]
-&gt;&gt;&gt; wu([[1], [2,3], [4,5,6]]).dot("slice", 1).toArray();
-[[], [3], [5,6]]</pre>
+function SortedSet(value, left=theEmptySet, right=theEmptySet) {
+  this.value = value;
+  this.left  = left;
+  this.right = right;
+}
 
-        <h5 id="wu-dropwhile"><a href="#wu-dropwhile"><code>wu.Iterator.dropWhile</code></a></h5>
-        <pre class="spec">iterator.dropWhile(testFn)</pre>
-        <pre class="spec">iterator.dropWhile(testFn, context)</pre>
-        <p>
-          Drop items from this iterator while <code>testFn</code> returns a
-          truthy value. After it returns a non-truthy value, yield each
-          remaining element in turn. <code>Context</code> will be used
-          as <code>this</code> inside of the <code>testFn</code>. It defaults to
-          the iterator.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu([1,2,3,2,1]).dropWhile(function (n) { return n &lt; 3; }).toArray();
-[3,2,1]</pre>
+SortedSet.prototype[wu.iteratorSymbol] = function* () {
+  if (this.left !== theEmptySet) {
+    yield* this.left;
+  }
 
-        <h5 id="wu-filter"><a href="#wu-filter"><code>wu.Iterator.filter</code></a></h5>
-        <pre class="spec">iterator.filter(testFn)</pre>
-        <pre class="spec">iterator.filter(testFn, context)</pre>
-        <p>
-          Returns an iterator that yields only the items where
-          <code>testFn.call(context, item)</code> returns
-          truthy. <code>Context</code> defaults to the iterator.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu([1,2,3,4]).filter(function (x) { return x % 2 === 0; }).toArray();
-[2, 4]</pre>
+  yield this.value;
 
-        <h5 id="wu-has"><a href="#wu-has"><code>wu.Iterator.has</code></a></h5>
-        <pre class="spec">iterator.has(element)</pre>
-        <p>
-          Is <code>element</code> inside of this iterator? Equality is
-          calculated with <code>wu.eq</code>.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu([0,1,2]).has(3);
-false
-&gt;&gt;&gt; wu([{foo:1}, {bar:2}, {baz:3}]).has({bar:2});
-true</pre>
-
-        <h5 id="wu-map"><a href="#wu-map"><code>wu.Iterator.map</code></a></h5>
-        <pre class="spec">iterator.map(fn)</pre>
-        <pre class="spec">iterator.map(fn, context)</pre>
-        <p>
-          Returns an iterator that yields <code>fn.call(context, item)</code>
-          for every item in this iterator. <code>Context</code> defaults to this
-          iterator.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu.range(5).map(function (n) { return n * n; }).toArray();
-[0, 1, 4, 9, 16]
-&gt;&gt;&gt; wu.range(10).map(Math.sqrt).map(Math.ceil).toArray();
-[0, 1, 2, 2, 2, 3, 3, 3, 3, 3]</pre>
-
-        <h5 id="wu-mapply"><a href="#wu-mapply"><code>wu.Iterator.mapply</code></a></h5>
-        <pre class="spec">iterator.mapply(fn)</pre>
-        <pre class="spec">iterator.mapply(fn, context)</pre>
-        <p>
-          The same as <code>wu.Iterator.map</code>, except instead of yielding
-          <code>fn.call(context, item)</code>, it is assumed that every item is
-          an array and the resulting iterator yields <code>fn.apply(context,
-          item)</code> for every item in this iterator. <code>Context</code>
-          defaults to this iterator.
-        </p>
-        <p>
-          <code>Mapply</code> is especially useful with iterating over objects,
-          since iterators yield <code>[key, value]</code> pairs for
-          objects. However, remember that you can't expect there to be any
-          particular order when iterating over objects.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu([[0,2], [1,2], [2,2], [3,2]]).mapply(Math.pow).toArray();
-[0, 1, 4, 9]
-&gt;&gt;&gt; wu({foo:1, bar:2, baz:3}).mapply(function (k, v) { return k + " is " + v; })
-...                          .toArray()
-...                          .join(", ");
-"foo is 1, bar is 2, baz is 3"</pre>
-
-        <h5 id="wu-next"><a href="#wu-next"><code>wu.Iterator.next</code></a></h5>
-        <pre class="spec">iterator.next()</pre>
-        <p>
-          The <code>next</code> method is the low level building block
-          of <code>wu.Iterator</code>. Calling it will return the next item in
-          this iterator. If the iterator is exhausted and there are no more
-          items in this iterator, the <code>wu.StopIteration</code> error is
-          thrown. Generally, you shouldn't need to access this method directly
-          since there are so many other methods like <code>each</code>
-          and <code>toArray</code> that would probably better fit your needs.
-        </p>
-        <pre class="box">&gt;&gt;&gt; var iterator = wu({ foo: 1, bar: 2 });
-&gt;&gt;&gt; iterator.next();
-["foo", 1]
-&gt;&gt;&gt; iterator.next();
-["bar", 2]
-&gt;&gt;&gt; iterator.next();
-StopIteration
-&gt;&gt;&gt; iterator = wu("Hi");
-&gt;&gt;&gt; iterator.next();
-"H"
-&gt;&gt;&gt; iterator.next();
-"i"
-&gt;&gt;&gt; iterator.next();
-StopIteration
-&gt;&gt;&gt; iterator = wu([1,2]);
-&gt;&gt;&gt; iterator.next();
-1
-&gt;&gt;&gt; iterator.next();
-2
-&gt;&gt;&gt; iterator.next();
-StopIteration</pre>
-
-        <h5 id="wu-takewhile"><a href="#wu-takewhile"><code>wu.Iterator.takeWhile</code></a></h5>
-        <pre class="spec">iterator.takeWhile(testFn)</pre>
-        <pre class="spec">iterator.takeWhile(fn, context)</pre>
-        <p>
-          Returns a new iterator that yields elements from this iterator as long
-          as <code>testFn.call(context, item)</code> is
-          truthy. <code>Context</code> defaults to this iterator. Useful when
-          working with infinite sequences.
-        </p>
-        <pre class="box">&gt;&gt;&gt; var i = 10;
-&gt;&gt;&gt; wu.cycle([1,2,3]).takeWhile(function (n) { return i-- !== 0; }).toArray();
-[1, 2, 3, 1, 2, 3, 1, 2, 3, 1]</pre>
-
-        <h4 id="forceful"><a href="#forceful">Forceful</a></h4>
-
-        <p>
-          All of the following methods will force the iterator to be
-          evaluated. Beware: these methods will attempt to completely evaluate
-          infinite sequences which will send the code in to an infinite loop and
-          make the browser freeze! Use <code>wu.Iterator.asyncEach</code> on
-          infinite sequences or make them finite
-          via <code>wu.Iterator.takeWhile</code>.
-        </p>
-
-        <h5 id="wu-all"><a href="#wu-all"><code>wu.Iterator.all</code></a></h5>
-        <pre class="spec">iterator.all()</pre>
-        <pre class="spec">iterator.all(testFn)</pre>
-        <pre class="spec">iterator.all(testFn, context)</pre>
-        <p>
-          Returns true if testFn.call(context, item) is truthy for all items in
-          this iterator. <code>Context</code> defaults to this iterator,
-          and <code>testFn</code> defualts to coercion to boolean.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu([true, 1, {}]).all();
-true
-&gt;&gt;&gt; wu([true, 0, null]).all();
-false
-&gt;&gt;&gt; wu([1,2,3,4]).all(function (n) { return n &lt; 5; });
-true</pre>
-
-        <h5 id="wu-any"><a href="#wu-any"><code>wu.Iterator.any</code></a></h5>
-        <pre class="spec">iterator.any()</pre>
-        <pre class="spec">iterator.any(testFn)</pre>
-        <pre class="spec">iterator.any(testFn, context)</pre>
-        <p>
-          Returns true if testFn.call(context, item) is truthy for any items in
-          this iterator. <code>Context</code> defaults to this iterator,
-          and <code>testFn</code> defaults to coercion to boolean.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu([false, false, 1, false]).any();
-true
-&gt;&gt;&gt; wu([false, 0, null, undefined]).any();
-false
-&gt;&gt;&gt; wu([1,2,3,4,5]).any(function (n) { return n % 2 === 0; })
-true</pre>
-
-        <h5 id="wu-asynceach"><a href="#wu-asynceach"><code>wu.Iterator.asyncEach</code></a></h5>
-        <pre class="spec">iterator.asyncEach(fn)</pre>
-        <pre class="spec">iterator.asyncEach(fn, then)</pre>
-        <pre class="spec">iterator.asyncEach(fn, then, context)</pre>
-        <p>
-          Asynchronously call <code>fn.call(context, item)</code> for every item
-          in this iterator. Order is maintained. Calls the <code>then</code>
-          callback once (and if) iteration is finished. <code>Context</code>
-          defaults to this iterator.
-        </p>
-        <p>
-          <strong>This is the only safe way to force evaluation of infinite
-          sequences without freezing the browser</strong>. It does this by
-          yielding control to the UI thread between every iteration via
-          <code>setTimeout</code>.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu(Infinity).asyncEach(wu.curry(wu.bind(console, console.log),
-...                                 "All work and no play makes Jack a dull boy."));
-"All work and no play makes Jack a dull boy."
-"All work and no play makes Jack a dull boy."
-"All work and no play makes Jack a dull boy."
-"All work and no play makes Jack a dull boy."
-"All work and no play makes Jack a dull boy."
-"All work and no play makes Jack a dull boy."
-"All work and no play makes Jack a dull boy."
-"All work and no play makes Jack a dull boy."
-"All work and no play makes Jack a dull boy."
-"All work and no play makes Jack a dull boy."
-.
-.
-.</pre>
-
-        <h5 id="wu-each"><a href="#wu-each"><code>wu.Iterator.each</code></a></h5>
-        <pre class="spec">iterator.each(fn)</pre>
-        <pre class="spec">iterator.each(fn, context)</pre>
-        <p>
-          Runs <code>fn.call(context, item)</code> until all items from the
-          iterator are exhausted. Returns the collection of all items from this
-          iterator as an array. <code>Context</code> defaults to this iterator.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu(document.querySelectorAll("h2")).each(function (el) {
-...     el.parentElement.removeChild(el);
-... });
-[&lt;h2&gt;, &lt;h2&gt;, &lt;h2&gt;, ...]</pre>
-
-        <h5 id="wu-eachply"><a href="#wu-eachply"><code>wu.Iterator.eachply</code></a></h5>
-        <pre class="spec">iterator.eachply(fn)</pre>
-        <pre class="spec">iterator.eachply(fn, context)</pre>
-        <p>
-          Runs <code>fn.apply(context, item)</code> until all items from the
-          iterator are exhausted. Returns the collection of all items from this
-          iterator as an array. <code>Context</code> defaults to this iterator.
-        </p>
-        <p>
-          Useful for use with objects, since iterators yield <code>[key,
-          value]</code> pairs from objects. However, keep in mind that order is
-          not guaranteed when iterating over objects.
-        </p>
-        <pre class="box">&gt;&gt;&gt; var userRecord = {
-...     name:"Johnny Keyboard",
-...     username: "keyboaj",
-...     password:"nunya"
-... };
-&gt;&gt;&gt; wu(userRecord).eachply(function (k, v) {
-...     $("ul:last").append("&lt;li>" + k + ": " + v + "&lt;/li>");
-... });
-[["name", "Johnny Keyboard"], ["username", "keyboaj"], ["password", "nunya"]]</pre>
-
-        <h5 id="wu-force"><a href="#wu-force"><code>wu.Iterator.force</code></a></h5>
-        <p>
-          A synonym for <a href="#wu-toarray"><code>wu.Iterator.toArray()</code></a>.
-        </p>
-
-        <h5 id="wu-groupby"><a href="#wu-groupby"><code>wu.Iterator.groupBy</code></a></h5>
-        <pre class="spec">iterator.groupBy(propertyName)</pre>
-        <pre class="spec">iterator.groupBy(methodName)</pre>
-        <pre class="spec">iterator.groupBy(methodName, arg1, arg2, ..., argN)</pre>
-        <p>
-          Aggregate each item in this iterator based on
-          common <code>item.propertyName</code> or <code>item.methodName(arg1,
-          arg2, ..., argN)</code> values.
-        </p>
-        <pre class="box">&gt;&gt;&gt; var people = [{first:"Nick", last:"Fitzgerald"},
-...               {first:"Nick", last:"Nolte"},
-...               {first:"John", last:"Smith"}];
-&gt;&gt;&gt; wu(people).groupBy("first");
-{ Nick: [{first:"Nick", last:"Fitzgerald"},
-         {first:"Nick", last:"Nolte"}],
-  John: [{first:"John", last:"Smith"}] }</pre>
-
-        <h5 id="wu-reduce"><a href="#wu-reduce"><code>wu.Iterator.reduce</code></a></h5>
-        <pre class="spec">iterator.reduce(fn)</pre>
-        <pre class="spec">iterator.reduce(fn, initial)</pre>
-        <pre class="spec">iterator.reduce(fn, initial, context)</pre>
-        <p>
-          Applies <code>fn</code> against each item in this iterator, left to
-          right, building them up to accumulate a single
-          value. <code>Initial</code> defaults to the first item in this
-          iterator, <code>context</code> defaults to this iterator.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu([1,2,3,4]).reduce(function (n, m) { return n + m; });
-10</pre>
-
-        <h5 id="wu-reduceright"><a href="#wu-reduceright"><code>wu.Iterator.reduceRight</code></a></h5>
-        <pre class="spec">iterator.reduceRight(fn)</pre>
-        <pre class="spec">iterator.reduceRight(fn, initial)</pre>
-        <pre class="spec">iterator.reduceRight(fn, initial, context)</pre>
-        <p>
-          The exact same as <code>wu.Iterator.reduce</code>, except that instead
-          of accumulating from left to right, it accumulates from right to
-          left. <code>Initial</code> defaults to the last item in this
-          iterator, <code>context</code> defaults to this iterator.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu([[1,2,3], [4,5], [6,7,8]]).reduceRight(function (a, b) {
-...     return a.concat(b);
-... });
-[1, 2, 3, 4, 5, 6, 7, 8]</pre>
-
-        <h5 id="wu-toarray"><a href="#wu-toarray"><code>wu.Iterator.toArray</code></a></h5>
-        <pre class="spec">iterator.toArray()</pre>
-        <p>
-          Force evaluation and return every item in this iterator as an array.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu.range(1, 5).map(Math.log).toArray();
-[0, 0.6931471805599453, 1.0986122886681098, 1.3862943611198906]
-&gt;&gt;&gt; wu({foo:1, bar:2}).toArray();
-[["foo",1], ["bar", 2]]</pre>
-
-        <h4 id="extending-iterators"><a href="#extending-iterators">Extending iterators</a></h4>
-
-        <h5><code>wu.fn</code></h5>
-
-        <p>
-          To extend <code>wu.Iterator</code> and add your own methods, simply
-          attach your custom method to <code>wu.fn</code>. Here is an example
-          that allows you to filter and map at the same time, with the same
-          function. Any <code>null</code> value is assumed to be unwanted, and
-          is filtered.
-        </p>
-
-        <pre class="box">&gt;&gt;&gt; wu.fn.mapFilter = function mapFilter(fn, context) {
-...     context = context || this;
-...     return this.map(fn, context).filter(function (obj) {
-...         return obj !== null;
-...     });
-... }</pre>
-
-        <h5><code>wu.Iterator(function next() { ... })</code></h5>
-
-        <p>
-          If your custom method is more complex, and you want to just implement
-          the iterators <code>.next()</code> method directly, there is a way to
-          do that too. Pass your <code>.next()</code> method to the wu.Iterator
-          constructor directly. Here is the implementation
-          of <code>wu.Iterator.dropWhile</code> which uses this technique (modified for readability).
-        </p>
-
-        <pre class="box">// While fn.call(context, item) is "truthy", do not return any items from
-// this iterable.
-wu.fn.dropWhile = function dropWhile(fn, context) {
-    var keepDropping = true, that = this;
-    context = context || this;
-    return wu.Iterator(function next() {
-        var item = that.next();
-        return keepDropping && fn.call(context, item) ?
-            next() :
-            (function () {
-                keepDropping = false;
-                return item;
-            }());
-    });
+  if (this.right !== theEmptySet) {
+    yield* this.right;
+  }
 };
-</pre>
 
-        <h5>Marking iterators empty with <code>wu.fn.stop</code></h5>
+const insert = (set, x) => {
+  if (set === theEmptySet) {
+    return new SortedSet(x);
+  }
 
-        <p>
-          When writing you custom iterator method, if you want to make the
-          iterator stop yielding items earlier than it normally would, just
-          call <code>wu.fn.stop</code> (which is available
-          as <code>this.stop()</code> from within your <code>next</code>
-          method). It will do the following in order:
-        </p>
-        <ol>
-          <li>
-            Replace this iterator instance's <code>.next()</code> method
-            with <pre class="box">function () { throw new StopIteration(); }</pre> so that
-            the remaining items in your iterator are no longer accessible.
-          </li>
-          <li>
-            Throw a <code>StopIteration</code> error to signify that this
-            iterator is empty.
-          </li>
-        </ol>
+  const { value, left, right } = set;
 
-        <h3 id="pattern-matching"><a href="#pattern-matching">Pattern matching</a></h3>
+  if (x < value) {
+    return new SortedSet(value, insert(left, x), right);
+  } else if (x > value) {
+    return new SortedSet(value, left, insert(right, x));
+  } else {
+    return set;
+  }
+};
+{% endhighlight %}
 
-        <h4 id="wu-match"><a href="#wu-match"><code>wu.match</code></a></h4>
-        <pre class="spec">wu.match(pattern1, then1, pattern2, then2, ..., patternN, thenN)</pre>
+              <p>
+                We can initialize a set of 100 random floats to work with:
+              </p>
 
-        <p>
-          Returns a function that performs Erlang-/Haskell-esque pattern
-          matching on the arguments object when it is called. To match on the
-          type of an object, use its constructor as a placeholder. To provide a
-          pattern that will always succeed, use <code>wu.___</code> as the
-          placeholder. If no match is found, a <code>TypeError</code> is thrown.
-        </p>
+              {% highlight js %}
+let s = theEmptySet;
 
-        <p>
-          Below is a simple example involving matching arguments to numbers
-          literals and the <code>Number</code> constructor. Notice
-          the <code>TypeError</code> when no match is found.
-        </p>
+let n = 100;
+while (n--) {
+  s = insert(s, Math.random());
+}
+{% endhighlight %}
 
-        <pre class="box">
-&gt;&gt;&gt; var describeNums = wu.match([ 1 ],      "One!",
-...                             [ 2 ],      "Two!",
-...                             [ Number ], "Some other number!")
-&gt;&gt;&gt; describeNums(1);
-"One!"
-&gt;&gt;&gt; describeNums(2);
-"Two!"
-&gt;&gt;&gt; describeNums(3);
-"Some other number!"
-&gt;&gt;&gt; describeNums({});
-TypeError: wu.match: The form did not match any given pattern.</pre>
+              <p>
+                To get the sum of all elements greater than .8 in the set:
+              </p>
 
-        <p>Here is an example showcasing the typical definition of factorial.</p>
+              {% highlight js %}
+wu(s).dropWhile(n => n <= .8).reduce((x, y) => x + y);
+{% endhighlight %}
 
-        <pre class="box">&gt;&gt;&gt; var factorial = wu.match([ 0 ],      1,
-...                          [ Number ], function (n) {
-...                              return n * factorial(n - 1);
-...                          });
-&gt;&gt;&gt; factorial(5);
-120</pre>
+              <p>
+                To find the number of elements that are less than .25:
+              </p>
 
-        <p>
-          The classic definition of map is easily expressed via pattern
-          matching.
-        </p>
+              {% highlight js %}
+wu(s).takeWhile(n => n < .25).length();
+{% endhighlight %}
 
-        <pre class="box">&gt;&gt;&gt; var greedyMap = wu.match([ wu.___, [] ],
-...                              [],
-...                          [ Function, Array ],
-...                              function (fn, arr) {
-...                                  return [fn(arr[0])].concat(map(fn, arr.slice(1)));
-...                              }
-...                          );
-&gt;&gt;&gt; greedyMap(function (n) { return n * n; }, [1,2,3,4])
-[1, 4, 9, 16]</pre>
+              <p>
+                To find the first element whose square is greater than .5:
+              </p>
 
-        <h3 id="lego-functions"><a href="#lego-functions">Lego functions</a></h3>
+              {% highlight js %}
+wu(s).filter(n => n * n > .5).find(n => n > .5);
+{% endhighlight %}
+          </section>
+        </section>
 
-        <h4 id="wu-autocurry"><a href="#wu-wu-autocurry"><code>wu.autoCurry</code></a></h4>
-        <pre class="spec">wu.autoCurry(fn)</pre>
-        <pre class="spec">wu.autoCurry(fn, numArgsExpected)</pre>
-        <p>
-          Function decorator that automatically provides currying to the given
-          function. Optionally, pass a number as the second argument to signify
-          the maximum number of arguments to curry. If it is missing, we default
-          to <code>fn.length</code>.
-        </p>
-        <pre class="box">&gt;&gt;&gt; var add = wu.autoCurry(function (a, b, c) { return a + b + c; });
-&gt;&gt;&gt; add(1)(1)(1);
-3
-&gt;&gt;&gt; add(1)()(1)()(1);
-3
-&gt;&gt;&gt; add(1)(1, 1);
-3
-&gt;&gt;&gt; add(1, 1, 1);
-3</pre>
+        <section id="API">
+          <h3><a href="#API">API</a></h3>
+          {% for p in site.posts %}
+          <hr />
+          <section id="{{ p.title | slugify }}">
+            {{ p.content }}
+          </section>
+          {% endfor %}
+          <hr/>
+        </section>
 
-        <h4 id="wu-bind"><a href="#wu-bind"><code>wu.bind</code></a></h4>
-        <pre class="spec">wu.bind(context, fn)</pre>
-        <pre class="spec">wu.bind(context, fn, arg1, arg2, ..., argN)</pre>
-        <p>
-          Return a new function which returns the value of <code>fn</code> when
-          called with <code>context</code> as <code>this</code>. Optionally,
-          curry arguments as well.
-        </p>
-        <pre class="box">&gt;&gt;&gt; var items = [1,2,3,4];
-&gt;&gt;&gt; var pop = items.pop;
-&gt;&gt;&gt; pop();
-undefined
-&gt;&gt;&gt; items;
-[1, 2, 3, 4]
-&gt;&gt;&gt; pop = wu.bind(items, items.pop);
-&gt;&gt;&gt; pop();
-4
-&gt;&gt;&gt; items;
-[1, 2, 3]</pre>
 
-        <h4 id="wu-compose"><a href="#wu-compose"><code>wu.compose</code></a></h4>
-        <pre class="spec">wu.compose(fn1, fn2, ..., fnN)</pre>
-        <p>
-          Compose multiple functions to create a new function. For
-          example, <code>wu.compose(f, g, h)(x)</code> is equivalent
-          to <code>f(g(h(x)))</code>.
-        </p>
-        <pre class="box">&gt;&gt;&gt; function square(x) { return x * x; }
-&gt;&gt;&gt; function add2(x) { return x + 2; }
-&gt;&gt;&gt; wu.compose(square, add2)(5);
-49
-&gt;&gt;&gt; wu.compose(add2, square)(5);
-27</pre>
-
-        <h4 id="wu-curry"><a href="#wu-curry"><code>wu.curry</code></a></h4>
-        <pre class="spec">wu.curry(fn, arg1, arg2, ..., argN)</pre>
-        <p>
-          Return a new function that calls <code>fn</code> with the
-          first <code>n</code> arguments frozen.
-        </p>
-        <pre class="box">&gt;&gt;&gt; function add(a, b) { return a + b; }
-&gt;&gt;&gt; var add3 = wu.curry(add, 3);
-&gt;&gt;&gt; add3(5);
-8</pre>
-
-        <h4 id="wu-not"><a href="#wu-not"><code>wu.not</code></a></h4>
-        <pre class="spec">wu.not(fn)</pre>
-        <p>
-          Returns a function that, when called, returns the boolean negation of
-          applying its arguments to <code>fn</code>.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu([4, 5, 6]).all(wu.not(wu.match([ Number ], false,
-...                                   [ wu.___ ], true)));
-true</pre>
-
-        <h4 id="wu-partial"><a href="#wu-partial"><code>wu.partial</code></a></h4>
-        <pre class="spec">wu.partial(fn, arg1, arg2, ..., argN)</pre>
-        <p>
-          Similar to currying, but instead of freezing the first <code>n</code>
-          arguments, you can select which ones to freeze and which to leave free
-          with <code>wu.___</code>.
-        </p>
-        <pre class="box">&gt;&gt;&gt; function sub(a, b) { return a - b; }
-&gt;&gt;&gt; var sub3 = wu.partial(sub, wu.___, 3);
-&gt;&gt;&gt; sub3(5);
-2</pre>
-
-        <h3 id="utilities"><a href="#utilities">Utilities</a></h3>
-
-        <h4 id="wu-eq"><a href="#wu-eq"><code>wu.eq</code></a></h4>
-        <pre class="spec">wu.eq(a, b)</pre>
-        <p>
-          Returns true if the <code>a</code> and <code>b</code> are
-          equivalent. Performs an "as-deep-as-needed" comparison on complex
-          structures such as arrays and objects. With primitive objects, uses
-          the <code>===</code> operator.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu.eq({}, { foo: 1 });
-false
-&gt;&gt;&gt; wu.eq({ foo: { bar: 1 } }, { foo: { bar: 1 } });
-true
-&gt;&gt;&gt; wu.eq([1, [2], {}], [1, [3], {}]);
-false
-&gt;&gt;&gt; wu.eq(null, false);
-false
-&gt;&gt;&gt; wu.eq([1, 2, [4, 5], { foo: {} }], [1, 2, [4, 5], { foo: {} }]);
-true</pre>
-
-        <h4 id="wu-memoize"><a href="#wu-memoize"><code>wu.memoize</code></a></h4>
-        <pre class="spec">wu.memoize(fn)</pre>
-        <p>
-          Returns a new function that caches the results of calling the
-          function <code>fn</code>. Arguments are keyed in the cache
-          using <code>JSON.stringify()</code>.
-        </p>
-        <p>
-          <strong>Important:</strong> If the <code>JSON</code> object is not
-          globally available, <code>wu.memoize</code> will return the original
-          function and will not cache function calls. In older browsers that
-          don't support native JSON (notably IE7 and lower), this means you will
-          need to include
-          the <a href="http://json.org/"><code>json2.js</code></a> script for
-          wu.memoize to work correctly.
-        </p>
-        <pre class="box">&gt;&gt;&gt; var factorial = function (n) {
-...     console.log("Calling factorial");
-...     return n === 0 ? 1 : n * factorial(n - 1);
-... };
-&gt;&gt;&gt; factorial(3);
-Calling factorial
-Calling factorial
-Calling factorial
-Calling factorial
-6
-&gt;&gt;&gt; var mfactorial = wu.memoize(factorial);
-&gt;&gt;&gt; mfactorial(3);
-Calling factorial
-Calling factorial
-Calling factorial
-Calling factorial
-6
-&gt;&gt;&gt; mfactorial(3);
-6</pre>
-
-        <h4 id="wu-toarray2"><a href="#wu-toarray2"><code>wu.toArray</code></a></h4>
-        <pre class="spec">wu.toArray(thing)</pre>
-        <p>
-          If <code>thing</code> is an iterator,
-          return <code>thing.toArray()</code>. Otherwise,
-          return <code>Array.prototype.slice.call(thing)</code>. Useful for
-          converting a function's <code>arguments</code> object to a true array.
-        </p>
-        <pre class="box">&gt;&gt;&gt; (function () { return wu.toArray(arguments); }(1, 2, 3, 4))
-[1, 2, 3, 4]</pre>
-
-        <h4 id="wu-tobool"><a href="#wu-tobool"><code>wu.toBool</code></a></h4>
-        <pre class="spec">wu.toBool(thing)</pre>
-        <p>
-          Forced coercion to boolean.
-        </p>
-        <pre class="box">&gt;&gt;&gt; wu.toBool(0)
-false
-&gt;&gt;&gt; wu.toBool(1)
-true
-&gt;&gt;&gt; wu.toBool(undefined)
-false
-&gt;&gt;&gt; wu.toBool(Infinity)
-true</pre>
-
-        <h3 id="wu-noconflict"><a href="#wu-noconflict"><code>wu.noConflict</code></a></h3>
-
-        <pre class="spec">wu.noConflict()</pre>
-        <p>
-          If you ever run in to issues where the global name <code>"wu"</code>
-          is already taken and you still want <code>wu.js</code> to play nice,
-          there is a wu.noConflict function. It will make <code>wu.js</code>
-          remove itself from the global object, replace whatever used to live
-          at <code>"wu"</code>, and return the library. You might use it like
-          this:
-        </p>
-        <pre class="box">(function (wu) {
-
-    // In here, we can still access wu
-
-}(wu.noConflict());
-
-// Out here, only the old wu exists</pre>
-
-        <hr />
-
-        <h2 id="contributing"><a href="#contributing">Contributing</a></h2>
-
-        <p>
-          To get involved in the development of <code>wu.js</code>, just fork
-          the repository on Github. When you have something juicy for me, send
-          me a pull request.
-        </p>
-
-        <div class="span-8">
-          <h3 id="github-page"><a href="http://github.com/fitzgen/wu.js">Github page</a></h3>
-        </div>
-        <div class="span-7">
-          <h3 id="issues"><a href="http://github.com/fitzgen/wu.js/issues">Issues</a></h3>
-        </div>
-
-        <hr />
-
-        <h2 id="tests"><a href="#tests">Tests</a></h2>
-
-        <p>
-          See the <a href="test/wu.tests.html" target="_blank">results of the
-          tests right in your browser</a>. If any don't pass, please file a
-          ticket in the issue tracker detailing which test failed and what
-          browser you are running!
-        </p>
+        <section id="contributing">
+          {% include contributing.html %}
+        </section>
 
       </div>
 
     </div>
 
-    <script src="lib/wu.js" type="text/javascript"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
-
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-16789952-1']);
-      _gaq.push(['_trackPageview']);
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
-
+    <script src="wu.js" type="application/javascript;version=1.8"></script>
   </body>
-
 </html>
