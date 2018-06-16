@@ -40,7 +40,8 @@
           <li>
             <a href="#API">API</a>
             <ul class="nav">
-              {% for p in site.posts %}
+              {% assign sorted_posts = site.posts | sort: 'title' %}
+              {% for p in sorted_posts %}
               <li>
                 <a href="#{{ p.title | slugify }}">{{ p.title }}</a>
               </li>
@@ -72,22 +73,31 @@
           <h4>In Modern Browsers Supporting ES6</h4>
 
           <h5>
-            <a href="./wu.js">Download the ES6 version</a>
+            <a href="https://raw.githubusercontent.com/mozilla/source-map/master/wu.js">Download the ES6 version</a>
           </h5>
 
           {% highlight html %}
-<script src="path/to/wu.js"></script>
+<script src="path/to/wu.js" defer></script>
 {% endhighlight %}
 
           <h4>In Legacy ES5 Browsers</h4>
 
           <h5>
-            <a href="./wu.es5.js">Download the ES6 version</a>
+            <a href="./dist/wu.debug.js">Download the ES5 debug build (non-minified, source-maps)</a>
           </h5>
 
           {% highlight html %}
-<script src="path/to/traceur-runtime.js"></script>
-<script src="path/to/wu.es5.js"></script>
+<script src="https://raw.githubusercontent.com/mozilla/source-map/master/dist/wu.debug.js" defer></script>
+{% endhighlight %}
+
+          <p>or</p>
+
+          <h5>
+            <a href="./dist/wu.min.js">Download the ES5 production build (minified)</a>
+          </h5>
+
+          {% highlight html %}
+<script src="https://raw.githubusercontent.com/mozilla/source-map/master/dist/wu.min.js" defer></script>
 {% endhighlight %}
 
           <h4>Node and npm</h4>
@@ -267,7 +277,7 @@ wu(s).filter(n => n * n > .5).find(n => n > .5);
 
         <section id="API">
           <h3><a href="#API">API</a></h3>
-          {% for p in site.posts %}
+          {% for p in sorted_posts %}
           <hr />
           <section id="{{ p.title | slugify }}">
             {{ p.content }}
